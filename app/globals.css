@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 田字格背景样式 */
+.tian-zi-ge {
+  background-image: 
+    linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+    linear-gradient(to bottom, #e5e7eb 1px, transparent 1px),
+    linear-gradient(to right, #d1d5db 1px, transparent 1px),
+    linear-gradient(to bottom, #d1d5db 1px, transparent 1px);
+  background-size: 
+    50% 50%,
+    50% 50%,
+    100% 100%,
+    100% 100%;
+  background-position: 
+    0 0,
+    0 0,
+    50% 0,
+    0 50%;
+}
+
+/* 动画效果 */
+@keyframes celebration {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration {
+  animation: celebration 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* 描红练习时当前笔画高亮效果 */
+.current-stroke-highlight {
+  stroke: #FF6B6B !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0px 0px 8px rgba(255, 107, 107, 0.8)) !important;
+  animation: stroke-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stroke-pulse {
+  0%, 100% {
+    opacity: 1;
+    stroke-width: 4;
+  }
+  50% {
+    opacity: 0.8;
+    stroke-width: 5;
+  }
+}
+
