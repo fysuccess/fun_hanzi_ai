@@ -1,161 +1,72 @@
-'use client'
-
-import { useState, useCallback, useEffect } from 'react'
-import SearchBar from '@/components/SearchBar'
-import HanziCharacter from '@/components/HanziCharacter'
-import CharacterInfo from '@/components/CharacterInfo'
-import { fetchCharacterData } from '@/lib/api'
-
-export default function Home() {
-  const [character, setCharacter] = useState<string>('')
-  const [characterData, setCharacterData] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
-
-  // 检测移动端
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(typeof window !== 'undefined' && window.innerWidth < 768)
-    }
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  const handleSearch = useCallback(async (char: string) => {
-    if (!char || char.trim() === '') {
-      setError('请输入一个汉字')
-      return
-    }
-
-    // 如果输入的是词组，取第一个字
-    const firstChar = char.trim()[0]
-    
-    // 验证是否为汉字
-    if (!/[\u4e00-\u9fa5]/.test(firstChar)) {
-      setError('请输入一个有效的汉字')
-      return
-    }
-
-    setCharacter(firstChar)
-    setLoading(true)
-    setError(null)
-
-    try {
-      const data = await fetchCharacterData(firstChar)
-      setCharacterData(data)
-    } catch (err: any) {
-      setError(err.message || '获取汉字信息失败，请稍后重试')
-      setCharacterData(null)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
+export default function Landing() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-      <div className="container mx-auto px-4 py-6 md:py-10 max-w-7xl">
-        {/* 头部标题 - 渐变效果 */}
-        <div className="text-center mb-8 md:mb-10 fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3">
-            <span className="text-gradient">字趣 AI</span>
-          </h1>
-          <p className="text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 font-medium">
-            🎨 智能化、可视化的汉字学习平台
-          </p>
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full">AI 驱动</span>
-            <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-full">笔顺动画</span>
-            <span className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">趣味学习</span>
+    <main className="min-h-screen bg-gradient-to-br from-sky-50 via-violet-50 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* 顶部品牌区 */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/60 dark:bg-gray-800/60 shadow">
+            <span className="text-2xl">🎓</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-200">学习乐园</span>
           </div>
+          <h1 className="mt-4 text-4xl md:text-5xl font-extrabold text-gradient">选择你的学习之旅</h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-300">进入「字趣AI」或「数学小天才」，开始有趣的学习体验</p>
         </div>
 
-        {/* 搜索栏 */}
-        <div className="mb-8 md:mb-10">
-          <SearchBar onSearch={handleSearch} loading={loading} />
-        </div>
-
-        {/* 错误提示 - 优化样式 */}
-        {error && (
-          <div className="mb-6 md:mb-8 p-4 bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 text-red-700 dark:text-red-400 rounded-lg text-sm md:text-base shadow-md slide-in-up">
-            <div className="flex items-center gap-2">
-              <span className="text-xl">⚠️</span>
-              <span>{error}</span>
-            </div>
-          </div>
-        )}
-
-        {/* 内容区域 - 增强卡片效果 */}
-        {character && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-            {/* 左侧：笔画动画 */}
-            <div className="card slide-in-up p-6 md:p-8">
-              <div className="mb-4">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                  <span className="text-2xl">✍️</span>
-                  笔顺演示
-                </h2>
+        {/* 导航卡片 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* 字趣AI */}
+          <a href="/hanzi" className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg hover:shadow-2xl transition">
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,#ffffff,transparent_40%)]" />
+            <div className="p-8">
+              <div className="flex items-center gap-4">
+                <div className="text-5xl">🈶</div>
+                <div>
+                  <div className="text-2xl font-bold">字趣 AI</div>
+                  <div className="text-sm opacity-90">智能化、可视化的汉字学习平台</div>
+                </div>
               </div>
-              <HanziCharacter 
-                char={character} 
-                size={isMobile ? 260 : 320}
-                loading={loading}
-              />
+              <div className="mt-6 bg-white/20 rounded-2xl p-4">
+                <ul className="text-sm space-y-1">
+                  <li>• AI 趣味讲解</li>
+                  <li>• 笔顺动画演示</li>
+                  <li>• 适合儿童的互动学习</li>
+                </ul>
+              </div>
+              <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-indigo-700 font-semibold group-hover:gap-3 transition">
+                进入学习 <span>➜</span>
+              </div>
             </div>
+          </a>
 
-            {/* 右侧：汉字信息 */}
-            <div className="card slide-in-up p-6 md:p-8" style={{ animationDelay: '0.1s' }}>
-              {loading ? (
-                <div className="flex flex-col items-center justify-center h-64 md:h-80">
-                  <div className="relative">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-200 dark:border-purple-800"></div>
-                    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-purple-600 absolute top-0 left-0"></div>
-                  </div>
-                  <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm">AI 正在生成内容...</p>
+          {/* 数学小天才 */}
+          <a href="/math" className="group relative block overflow-hidden rounded-3xl bg-gradient-to-br from-pink-500 to-orange-500 text-white shadow-lg hover:shadow-2xl transition">
+            <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_80%_20%,#ffffff,transparent_40%)]" />
+            <div className="p-8">
+              <div className="flex items-center gap-4">
+                <div className="text-5xl">🔢</div>
+                <div>
+                  <div className="text-2xl font-bold">数学小天才</div>
+                  <div className="text-sm opacity-90">趣味练习加减乘除、分数和小数</div>
                 </div>
-              ) : characterData ? (
-                <CharacterInfo data={characterData} />
-              ) : (
-                <div className="text-center text-gray-500 dark:text-gray-400 py-12 md:py-16 text-sm md:text-base">
-                  <div className="text-4xl mb-3">🔍</div>
-                  <p>请输入汉字开始学习</p>
-                </div>
-              )}
+              </div>
+              <div className="mt-6 bg-white/20 rounded-2xl p-4">
+                <ul className="text-sm space-y-1">
+                  <li>• 即时正确/错误反馈</li>
+                  <li>• 三档难度可选</li>
+                  <li>• 适合触屏设备的大按钮</li>
+                </ul>
+              </div>
+              <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-pink-700 font-semibold group-hover:gap-3 transition">
+                进入练习 <span>➜</span>
+              </div>
             </div>
-          </div>
-        )}
+          </a>
+        </div>
 
-        {/* 空状态 - 优化设计 */}
-        {!character && !loading && (
-          <div className="text-center py-16 md:py-24 fade-in">
-            <div className="mb-6 relative inline-block">
-              <div className="text-7xl md:text-8xl pulse">📚</div>
-              <div className="absolute -top-2 -right-2 text-3xl">✨</div>
-            </div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-3">
-              开始你的汉字学习之旅
-            </h2>
-            <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-              在上方搜索框输入任意汉字，体验 AI 驱动的智能学习
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mt-8">
-              {['猫', '火', '休', '学'].map((char, index) => (
-                <button
-                  key={char}
-                  onClick={() => handleSearch(char)}
-                  className="group p-4 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 btn-hover"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="text-3xl md:text-4xl mb-2 group-hover:scale-110 transition-transform">
-                    {char}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">点击学习</div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* 额外说明 */}
+        <div className="mt-10 text-center text-sm text-gray-500 dark:text-gray-400">
+          提示：你随时可以从顶部返回学习乐园选择其它模块。
+        </div>
       </div>
     </main>
   )
