@@ -95,6 +95,16 @@ export default function MathGeniusPage() {
           <p className="text-gray-600 dark:text-gray-300">趣味练习加减乘除、分数和小数，适合5-8岁儿童</p>
         </div>
 
+        <div className="flex justify-center mb-6">
+          <a
+            href="/math/kousuan"
+            className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-medium hover:from-green-600 hover:to-emerald-700 transition shadow-md flex items-center gap-2"
+          >
+            <span className="text-lg">🧮 口算题练习</span>
+            <span className="text-sm opacity-90">快速练习加减乘除</span>
+          </a>
+        </div>
+
         <div className="flex gap-2 justify-center mb-6">
           <LevelButton level="easy" active={level === 'easy'} onClick={() => setLevel('easy')} />
           <LevelButton level="medium" active={level === 'medium'} onClick={() => setLevel('medium')} />
