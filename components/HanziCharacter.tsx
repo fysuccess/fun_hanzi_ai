@@ -32,22 +32,25 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
   }, [size])
 
   useEffect(() => {
-    if (!writerRef.current || !char || loading) return
+    const writerElement = writerRef.current
+    const instance = instanceRef.current
+    
+    if (!writerElement || !char || loading) return
 
     // 清理之前的实例
-    if (instanceRef.current) {
+    if (instance) {
       // 尝试停止动画
-      if (typeof instanceRef.current.cancelAnimation === 'function') {
-        instanceRef.current.cancelAnimation()
-      } else if (typeof instanceRef.current.stopCharacterAnimation === 'function') {
-        instanceRef.current.stopCharacterAnimation()
+      if (typeof instance.cancelAnimation === 'function') {
+        instance.cancelAnimation()
+      } else if (typeof instance.stopCharacterAnimation === 'function') {
+        instance.stopCharacterAnimation()
       }
       instanceRef.current = null
     }
     
     // 清空之前的内容
-    if (writerRef.current) {
-      writerRef.current.innerHTML = ''
+    if (writerElement) {
+      writerElement.innerHTML = ''
     }
 
     // 动态导入hanzi-writer
@@ -85,26 +88,26 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
 
     return () => {
       // 清理函数：停止动画并清空内容
-      if (instanceRef.current) {
+      if (instance) {
         // 清理高亮定时器和观察器
-        const highlightInterval = (instanceRef.current as any).__highlightInterval
+        const highlightInterval = (instance as any).__highlightInterval
         if (highlightInterval) {
           clearInterval(highlightInterval)
         }
-        const observer = (instanceRef.current as any).__highlightObserver
+        const observer = (instance as any).__highlightObserver
         if (observer) {
           observer.disconnect()
         }
         
-        if (typeof instanceRef.current.cancelAnimation === 'function') {
-          instanceRef.current.cancelAnimation()
-        } else if (typeof instanceRef.current.stopCharacterAnimation === 'function') {
-          instanceRef.current.stopCharacterAnimation()
+        if (typeof instance.cancelAnimation === 'function') {
+          instance.cancelAnimation()
+        } else if (typeof instance.stopCharacterAnimation === 'function') {
+          instance.stopCharacterAnimation()
         }
         instanceRef.current = null
       }
-      if (writerRef.current) {
-        writerRef.current.innerHTML = ''
+      if (writerElement) {
+        writerElement.innerHTML = ''
       }
     }
   }, [char, actualSize, loading, speed, isQuizMode])
@@ -219,13 +222,14 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
           
           // 添加高亮当前笔画的功能
           const writerInstance = instanceRef.current
-          if (writerInstance && writerRef.current) {
+          const writerElement = writerRef.current
+          if (writerInstance && writerElement) {
             // 等待SVG渲染完成
             setTimeout(() => {
               const highlightCurrentStroke = () => {
-                if (!writerRef.current || !isQuizMode) return
+                if (!writerElement || !isQuizMode) return
                 
-                const svg = writerRef.current.querySelector('svg')
+                const svg = writerElement.querySelector('svg')
                 if (!svg) return
                 
                 // 移除之前的高亮
@@ -318,7 +322,7 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
                 highlightCurrentStroke()
               })
               
-              const svg = writerRef.current.querySelector('svg')
+              const svg = writerElement.querySelector('svg')
               if (svg) {
                 observer.observe(svg, {
                   childList: true,
@@ -329,7 +333,7 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
                 
                 // 也使用定时器作为备用（每500ms检查一次）
                 const highlightInterval = setInterval(() => {
-                  if (!writerRef.current || !isQuizMode) {
+                  if (!writerElement || !isQuizMode) {
                     clearInterval(highlightInterval)
                     observer.disconnect()
                     return
@@ -468,4 +472,3 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
     </div>
   )
 }
-
