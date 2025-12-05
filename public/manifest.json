@@ -1,0 +1,36 @@
+{
+  "name": "字趣AI - 智能汉字学习",
+  "short_name": "字趣AI",
+  "description": "智能化、可视化的汉字学习应用，支持笔顺动画、AI趣味讲解、描红练习",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "learning"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "搜索汉字",
+      "short_name": "搜索",
+      "description": "快速搜索汉字",
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
+

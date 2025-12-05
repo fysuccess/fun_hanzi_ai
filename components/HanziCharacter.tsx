@@ -34,9 +34,6 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
   useEffect(() => {
     if (!writerRef.current || !char || loading) return
 
-    // 在 effect 开始时复制 ref 值，以便在 cleanup 中使用
-    const writerElement = writerRef.current
-
     // 清理之前的实例
     if (instanceRef.current) {
       // 尝试停止动画
@@ -49,8 +46,8 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
     }
     
     // 清空之前的内容
-    if (writerElement) {
-      writerElement.innerHTML = ''
+    if (writerRef.current) {
+      writerRef.current.innerHTML = ''
     }
 
     // 动态导入hanzi-writer
@@ -106,8 +103,8 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
         }
         instanceRef.current = null
       }
-      if (writerElement) {
-        writerElement.innerHTML = ''
+      if (writerRef.current) {
+        writerRef.current.innerHTML = ''
       }
     }
   }, [char, actualSize, loading, speed, isQuizMode])
@@ -321,7 +318,7 @@ export default function HanziCharacter({ char, size = 300, loading = false }: Ha
                 highlightCurrentStroke()
               })
               
-              const svg = writerRef.current?.querySelector('svg')
+              const svg = writerRef.current.querySelector('svg')
               if (svg) {
                 observer.observe(svg, {
                   childList: true,

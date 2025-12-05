@@ -9,7 +9,12 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:db": "node scripts/test-db-connection.js"
+    "test:db": "node scripts/test-db-connection.js",
+    "export": "next build && next export",
+    "cap:add:android": "npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "android:build": "npm run build && npm run cap:sync && npm run cap:open:android"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.0",

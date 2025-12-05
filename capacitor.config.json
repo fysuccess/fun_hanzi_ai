@@ -1,0 +1,21 @@
+{
+  "appId": "com.funhanzi.app",
+  "appName": "字趣AI",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "hostname": "your-domain.com",
+    "allowNavigation": [
+      "*.vercel.app",
+      "*.netlify.app"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#3b82f6"
+    }
+  }
+}
+
