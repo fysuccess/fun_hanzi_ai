@@ -151,10 +151,11 @@ export default function NumberPad({
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         style={{
-          left: position.x >= 0 ? `${position.x}px` : '50%',
+          left: position.x >= 0 ? `${position.x}px` : (isMobile ? '50%' : undefined),
+          right: position.x < 0 && !isMobile ? '16px' : undefined,
           top: position.y >= 0 ? `${position.y}px` : (isMobile ? 'auto' : '100px'),
-          bottom: position.y < 0 && isMobile ? '16px' : undefined,
-          transform: position.x < 0 ? 'translateX(-50%)' : undefined,
+          bottom: position.y < 0 && isMobile ? '8px' : undefined,
+          transform: position.x < 0 && isMobile ? 'translateX(-50%)' : undefined,
         }}
         className={`fixed bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl shadow-2xl p-3 sm:p-6 pointer-events-auto animate-in ${isMobile ? 'slide-in-from-bottom w-[calc(100%-32px)] max-w-sm' : 'slide-in-from-right w-80'} duration-300 ${isDragging ? 'cursor-grabbing' : ''}`}
       >

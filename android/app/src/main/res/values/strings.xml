@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">字趣AI</string>
+    <string name="title_activity_main">字趣AI</string>
+    <string name="package_name">com.funhanzi.app</string>
+    <string name="custom_url_scheme">com.funhanzi.app</string>
+</resources>

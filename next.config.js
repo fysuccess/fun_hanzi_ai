@@ -1,12 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // PWA配置
-  // 如果需要静态导出（用于Capacitor），取消下面的注释
-  // output: 'export',
-  // images: {
-  //   unoptimized: true,
-  // },
+  // 静态导出（用于Capacitor打包Android/iOS）
+  output: 'export',
+  images: {
+    unoptimized: true,
+  },
+  // 禁用尾部斜杠以兼容Capacitor
+  trailingSlash: true,
   async headers() {
     return [
       {
