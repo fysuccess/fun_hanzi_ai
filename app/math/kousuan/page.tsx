@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { KousuanProblem, KousuanType, generateKousuanProblems, calculateScore } from '@/lib/kousuan'
+import NumberPad from '@/components/NumberPad'
 
 const COUNT_OPTIONS = [10, 20, 30, 40, 50] as const
 type CountOption = (typeof COUNT_OPTIONS)[number]
@@ -67,6 +68,8 @@ export default function KousuanPage() {
   const [timerActive, setTimerActive] = useState(false)
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyLevel | '自定义'>('自定义')
   const [showPrintDialog, setShowPrintDialog] = useState(false)
+  const [useNumberPad, setUseNumberPad] = useState(false)
+  const [activeInputIndex, setActiveInputIndex] = useState<number | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   // 初始化生成题目
@@ -127,6 +130,27 @@ export default function KousuanPage() {
   const handleAnswerChange = (index: number, value: string) => {
     const newAnswers = [...userAnswers]
     newAnswers[index] = value
+    setUserAnswers(newAnswers)
+  }
+
+  const handleNumberPadInput = (value: string) => {
+    if (activeInputIndex === null) return
+    const newAnswers = [...userAnswers]
+    newAnswers[activeInputIndex] = (newAnswers[activeInputIndex] || '') + value
+    setUserAnswers(newAnswers)
+  }
+
+  const handleNumberPadDelete = () => {
+    if (activeInputIndex === null) return
+    const newAnswers = [...userAnswers]
+    newAnswers[activeInputIndex] = newAnswers[activeInputIndex].slice(0, -1)
+    setUserAnswers(newAnswers)
+  }
+
+  const handleNumberPadClear = () => {
+    if (activeInputIndex === null) return
+    const newAnswers = [...userAnswers]
+    newAnswers[activeInputIndex] = ''
     setUserAnswers(newAnswers)
   }
 
@@ -247,6 +271,25 @@ export default function KousuanPage() {
                       {opt}题
                     </button>
                   ))}
+                </div>
+              </div>
+
+              {/* 输入方式选择 */}
+              <div className="mb-6">
+                <h3 className="font-semibold mb-2">输入方式</h3>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setUseNumberPad(false)}
+                    className={`flex-1 px-4 py-2 rounded-full text-sm font-medium border transition-all btn-hover ${!useNumberPad ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                  >
+                    ⌨️ 系统键盘
+                  </button>
+                  <button
+                    onClick={() => setUseNumberPad(true)}
+                    className={`flex-1 px-4 py-2 rounded-full text-sm font-medium border transition-all btn-hover ${useNumberPad ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                  >
+                    🔢 数字小键盘
+                  </button>
                 </div>
               </div>
 
@@ -486,7 +529,8 @@ export default function KousuanPage() {
                     return (
                       <div
                         key={idx}
-                        className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-[1.02] ${isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-green-100 dark:shadow-green-900/30' : isWrong ? 'border-red-500 bg-red-50 dark:bg-red-900/20 shadow-red-100 dark:shadow-red-900/30' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700'}`}
+                        onClick={() => useNumberPad && !submitted && setActiveInputIndex(idx)}
+                        className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-[1.02] ${isCorrect ? 'border-green-500 bg-green-50 dark:bg-green-900/20 shadow-green-100 dark:shadow-green-900/30' : isWrong ? 'border-red-500 bg-red-50 dark:bg-red-900/20 shadow-red-100 dark:shadow-red-900/30' : activeInputIndex === idx && useNumberPad ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-300' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700'} ${useNumberPad && !submitted ? 'cursor-pointer' : ''}`}
                       >
                         <div className="flex items-start">
                           <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full font-bold mr-3 ${
@@ -527,9 +571,11 @@ export default function KousuanPage() {
                                 type="text"
                                 value={userAnswers[idx]}
                                 onChange={(e) => handleAnswerChange(idx, e.target.value)}
+                                onFocus={() => !useNumberPad && setActiveInputIndex(idx)}
                                 disabled={submitted}
-                                className={`w-full px-4 py-2 rounded-lg border ${isCorrect ? 'border-green-500 bg-green-50' : isWrong ? 'border-red-500 bg-red-50' : 'border-gray-300'} dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="输入答案"
+                                readOnly={useNumberPad && !submitted}
+                                className={`w-full px-4 py-2 rounded-lg border ${isCorrect ? 'border-green-500 bg-green-50' : isWrong ? 'border-red-500 bg-red-50' : activeInputIndex === idx ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-300'} dark:bg-gray-900 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${useNumberPad && !submitted ? 'cursor-pointer pointer-events-none' : ''}`}
+                                placeholder={useNumberPad ? "点击题目卡片输入" : "输入答案"}
                               />
                               {submitted && (
                                 <div className="mt-2 text-sm">
@@ -611,6 +657,19 @@ export default function KousuanPage() {
           </div>
         </div>
       </div>
+
+      {/* 悬浮数字小键盘 */}
+      {useNumberPad && activeInputIndex !== null && !submitted && (
+        <NumberPad
+          show={true}
+          onInput={handleNumberPadInput}
+          onDelete={handleNumberPadDelete}
+          onClear={handleNumberPadClear}
+          onClose={() => setActiveInputIndex(null)}
+          currentValue={userAnswers[activeInputIndex] || ''}
+          questionNumber={activeInputIndex + 1}
+        />
+      )}
     </main>
   )
 }
